@@ -72,4 +72,11 @@ public class Lights extends Mechanism {
 		this.blink = blink;
 		handleLighting();
 	}
+
+	public void doAuton() {
+		checkContextOwnership();
+		candle.setLEDs(0, 0, 0);
+		candle.setLEDs(0, 255, 10);
+		//does not need handleLighting() because it is during autonomous where we wouldn't want it to blink.
+	}
 }
