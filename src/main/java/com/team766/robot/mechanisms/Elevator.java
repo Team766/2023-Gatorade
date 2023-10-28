@@ -79,7 +79,7 @@ public class Elevator extends Mechanism {
 
 		rightMotor.follow(leftMotor, true);
 
-		leftMotor.getEncoder().setPosition(EncoderUtils.elevatorHeightToRotations(Position.RETRACTED.getHeight()));
+		resetEncoder();
 
 		pidController = leftMotor.getPIDController();
 		pidController.setFeedbackDevice(leftMotor.getEncoder());
@@ -91,6 +91,11 @@ public class Elevator extends Mechanism {
 		maxVelocity = ConfigFileReader.getInstance().getDouble(ELEVATOR_MAX_VELOCITY);
 		minOutputVelocity = ConfigFileReader.getInstance().getDouble(ELEVATOR_MIN_OUTPUT_VELOCITY);
 		maxAccel = ConfigFileReader.getInstance().getDouble(ELEVATOR_MAX_ACCEL);
+	}
+
+	public void resetEncoder() {
+		leftMotor.getEncoder().setPosition(
+				EncoderUtils.elevatorHeightToRotations(Position.RETRACTED.getHeight()));
 	}
 
 	public double getRotations() {

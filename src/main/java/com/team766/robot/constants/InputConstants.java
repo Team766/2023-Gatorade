@@ -36,7 +36,6 @@ public final class InputConstants {
 	// right axis
 	public static final int AXIS_ELEVATOR_MOVEMENT = 3;
 
-
 	// pov
 	public static final int POV_UP = 0;
 	public static final int POV_DOWN = 180;

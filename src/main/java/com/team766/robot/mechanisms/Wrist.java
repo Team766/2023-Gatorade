@@ -74,7 +74,7 @@ public class Wrist extends Mechanism {
 		}
 		motor = (CANSparkMax) halMotor;
 
-		motor.getEncoder().setPosition(EncoderUtils.wristDegreesToRotations(Position.TOP.getAngle()));
+		resetEncoder();
 
 		// stash the PIDController for convenience.  will update the PID values to the latest from the config
 		// file each time we use the motor.
@@ -86,6 +86,11 @@ public class Wrist extends Mechanism {
 		iGain = ConfigFileReader.getInstance().getDouble(WRIST_IGAIN);
 		dGain = ConfigFileReader.getInstance().getDouble(WRIST_DGAIN);
 		ffGain = ConfigFileReader.getInstance().getDouble(WRIST_FFGAIN);
+	}
+
+	public void resetEncoder() {
+		motor.getEncoder()
+				.setPosition(EncoderUtils.wristDegreesToRotations(Position.TOP.getAngle()));
 	}
 
 	public double getRotations() {
