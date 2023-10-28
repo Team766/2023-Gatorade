@@ -229,12 +229,12 @@ public class OI extends Procedure {
 					context.takeOwnership(Robot.elevator);
 					Robot.wrist.resetEncoder();
 					Robot.elevator.resetEncoder();
+					context.releaseOwnership(Robot.wrist);
+					context.releaseOwnership(Robot.elevator);
 				} else {
 					// look for elevator nudges
 					if (Math.abs(elevatorNudgeAxis) > 0.05) {
-						// elevatorManual = true;
 						context.takeOwnership(Robot.elevator);
-						// Robot.elevator.nudgeNoPID(elevatorNudgeAxis);
 						if (elevatorNudgeAxis > 0) {
 							Robot.elevator.nudgeUp();
 						} else {
@@ -245,9 +245,7 @@ public class OI extends Procedure {
 
 					// look for wrist nudges
 					if (Math.abs(wristNudgeAxis) > 0.05) {
-						// wristManual = true;
 						context.takeOwnership(Robot.wrist);
-						// Robot.wrist.nudgeNoPID(wristNudgeAxis);
 						if (wristNudgeAxis > 0) {
 							Robot.wrist.nudgeUp();
 						} else {
