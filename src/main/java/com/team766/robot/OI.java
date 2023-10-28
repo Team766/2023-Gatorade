@@ -133,10 +133,7 @@ public class OI extends Procedure {
 			}
 
 			// look for button presses to queue placement of intake/wrist/elevator superstructure
-			if (boxopGamepad.getButton(InputConstants.BUTTON_PLACEMENT_NONE)) {
-				placementPosition = PlacementPosition.NONE;
-				setLightsForPlacement();
-			} else if (boxopGamepad.getButton(InputConstants.BUTTON_PLACEMENT_LOW)) {
+			if (boxopGamepad.getButton(InputConstants.BUTTON_PLACEMENT_LOW)) {
 				placementPosition = PlacementPosition.LOW_NODE;
 				setLightsForPlacement();
 			} else if (boxopGamepad.getButton(InputConstants.BUTTON_PLACEMENT_MID)) {
@@ -155,8 +152,16 @@ public class OI extends Procedure {
 				new IntakeIn().run(context);
 			} else if (boxopGamepad.getButtonReleased(InputConstants.BUTTON_INTAKE_IN)) {
 				new IntakeIdle().run(context);
-			} else if (boxopGamepad.getButton(InputConstants.BUTTON_INTAKE_STOP)) {
+			}
+
+			// see if we should reset the button states
+			if (boxopGamepad.getButton(InputConstants.BUTTON_RESET_STATE)) {
+				// stop the intake
 				new IntakeStop().run(context);
+				// reset the placement position
+				placementPosition = PlacementPosition.NONE;
+				// reset the cone/cube selection to cones
+				new GoForCones().run(context);
 			}
 
 			// look for button hold to extend intake/wrist/elevator superstructure,
@@ -194,7 +199,7 @@ public class OI extends Procedure {
 				double elevatorNudgeAxis = -1 * boxopGamepad.getAxis(InputConstants.AXIS_ELEVATOR_MOVEMENT);
 				double wristNudgeAxis = -1 * boxopGamepad.getAxis(InputConstants.AXIS_WRIST_MOVEMENT);
 
-				if (boxopGamepad.getButtonPressed(InputConstants.BUTTON_PLACEMENT_NONE)) {
+				if (boxopGamepad.getButtonPressed(InputConstants.BUTTON_PLACEMENT_RESET_WRISTVATOR)) {
 					// bypass PID
 					if (Math.abs(elevatorNudgeAxis) > 0.05) {
 						elevatorManual = true;
@@ -219,7 +224,7 @@ public class OI extends Procedure {
 						context.releaseOwnership(Robot.wrist);
 						elevatorManual = false;
 					}
-				} else if (boxopGamepad.getButtonReleased(InputConstants.BUTTON_PLACEMENT_NONE)) {
+				} else if (boxopGamepad.getButtonReleased(InputConstants.BUTTON_PLACEMENT_RESET_WRISTVATOR)) {
 					context.takeOwnership(Robot.wrist);
 					context.takeOwnership(Robot.elevator);
 					Robot.wrist.resetEncoder();
