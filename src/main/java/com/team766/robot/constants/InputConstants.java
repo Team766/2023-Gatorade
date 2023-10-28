@@ -29,20 +29,19 @@ public final class InputConstants {
 	// RT
 	public static final int BUTTON_EXTEND_WRISTVATOR = 8;
 	// Start
-	public static final int BUTTON_INTAKE_STOP = 10; // used for development
+	public static final int BUTTON_RESET_STATE = 10;
 
 	// left axis
 	public static final int AXIS_WRIST_MOVEMENT = 1;
 	// right axis
 	public static final int AXIS_ELEVATOR_MOVEMENT = 3;
 
-
 	// pov
 	public static final int POV_UP = 0;
 	public static final int POV_DOWN = 180;
 
-	// RB
-	public static final int BUTTON_PLACEMENT_NONE = 6;
+	// LB
+	public static final int BUTTON_PLACEMENT_RESET_WRISTVATOR = 5;
 	// X/A/B/Y
 	public static final int BUTTON_PLACEMENT_HUMAN_PLAYER = 1; // X
 	public static final int BUTTON_PLACEMENT_HIGH = 4; // Y
