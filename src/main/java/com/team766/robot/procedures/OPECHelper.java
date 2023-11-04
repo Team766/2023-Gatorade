@@ -6,7 +6,7 @@ import com.team766.robot.Robot;
 import com.team766.robot.constants.FollowPointsInputConstants;
 import java.util.function.BooleanSupplier;
 import edu.wpi.first.wpilibj.DriverStation;
-import com.team766.odometry.*;
+import com.team766.localization.*;
 
 public class OPECHelper extends Procedure {
 

@@ -1,6 +1,6 @@
 package com.team766.robot;
 
-import com.team766.odometry.Point;
+import com.team766.localization.Point;
 
 /**
  * Constants defining points the robot may want to travel to

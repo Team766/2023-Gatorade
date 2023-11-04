@@ -2,9 +2,9 @@ package com.team766.robot.procedures;
 
 import java.util.ArrayList;
 import java.util.List;
+import com.team766.localization.PointDir;
 import com.team766.logging.Category;
 import com.team766.logging.Logger;
-import com.team766.odometry.PointDir;
 import com.team766.robot.constants.ChargeConstants;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 

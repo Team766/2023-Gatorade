@@ -4,10 +4,9 @@ import com.team766.framework.AutonomousMode;
 import com.team766.robot.procedures.*;
 
 import edu.wpi.first.wpilibj.DriverStation;
-
-import com.team766.odometry.Point;
-import com.team766.odometry.PointDir;
 import com.team766.framework.Procedure;
+import com.team766.localization.Point;
+import com.team766.localization.PointDir;
 
 public class AutonomousModes {
 
