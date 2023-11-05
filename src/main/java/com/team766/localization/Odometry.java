@@ -133,11 +133,12 @@ public class Odometry extends LoggingBase {
 			currPositions[i].setHeading(-CANCoderList[i].getAbsolutePosition() + gyroPosition);
 			angleChange = currPositions[i].getHeading() - prevPositions[i].getHeading();
 
+			// linear algebra bit
 			double yaw = -Math.toRadians(Robot.gyro.getGyroYaw());
 			double roll = Math.toRadians(Robot.gyro.getGyroRoll());
 			double pitch = Math.toRadians(Robot.gyro.getGyroPitch());
-
 			double w = Math.toRadians(CANCoderList[i].getAbsolutePosition());
+
 			Vector2D u = new Vector2D(Math.cos(yaw) * Math.cos(pitch), Math.sin(yaw) * Math.cos(pitch));
 			Vector2D v = new Vector2D(Math.cos(yaw) * Math.sin(pitch) * Math.sin(roll) - Math.sin(yaw) * Math.cos(roll), 
 								Math.sin(yaw) * Math.sin(pitch) * Math.sin(roll) + Math.cos(yaw) * Math.cos(roll));
@@ -150,6 +151,7 @@ public class Odometry extends LoggingBase {
 			//double oldWheelX;
 			//double oldWheelY;
 
+			// estimates the bot moved in a circle to calculate new position 
 			if (angleChange != 0) {
 				radius = 180 * (currEncoderValues[i] - prevEncoderValues[i]) / (Math.PI * angleChange);
 				deltaX = radius * Math.sin(Math.toRadians(angleChange));
