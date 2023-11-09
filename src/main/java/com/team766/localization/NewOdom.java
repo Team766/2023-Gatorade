@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Transform2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.geometry.Rotation2d;
  
 /**
@@ -30,7 +31,8 @@ public class NewOdom {
 	private Pose2d[] currPositions;
 	private double[] prevEncoderValues;
 	private double[] currEncoderValues;
-	private double gyroPosition;
+
+	private Rotation2d gyroPosition;
 	private Rotation2d rotation2d;
 
 	private Pose2d currentPosition;
@@ -41,7 +43,7 @@ public class NewOdom {
 	public static int ENCODER_TO_REVOLUTION_CONSTANT;
 
 	// In the same order as motorList, relative to the center of the robot
-	private Transform2d[] wheelPositions;
+	private Translation2d[] wheelPositions;
 	
 	/**
 	 * Constructor for Odometry, taking in several defines for the robot.
@@ -53,7 +55,7 @@ public class NewOdom {
 	 * @param encoderToRevolutionConstant The encoder to revolution constant of the wheels.
 	 * @param rateLimiterTime How often odometry should run.
 	 */
-	public NewOdom(MotorController[] motors, CANCoder[] CANCoders, Transform2d[] wheelLocations, double wheelCircumference, double gearRatio, int encoderToRevolutionConstant, double rateLimiterTime) {
+	public NewOdom(MotorController[] motors, CANCoder[] CANCoders, Translation2d[] wheelLocations, double wheelCircumference, double gearRatio, int encoderToRevolutionConstant, double rateLimiterTime) {
 
 		odometryLimiter = new RateLimiter(rateLimiterTime);
 		motorList = motors;
@@ -91,8 +93,8 @@ public class NewOdom {
 		currentPosition = P;
 		// log("Set Current Position to: " + P.toString());
 		for (int i = 0; i < motorCount; i++) {
-			prevPositions[i] = currentPosition.plus(wheelPositions[i]);
-			currPositions[i] = currentPosition.plus(wheelPositions[i]);
+			prevPositions[i] = currentPosition.plus(new Transform2d(wheelPositions[i], new Rotation2d()));
+			currPositions[i] = currentPosition.plus(new Transform2d(wheelPositions[i], new Rotation2d()));
 		}
 		// log("Current Position: " + currentPosition.toString());
 	}
@@ -123,7 +125,7 @@ public class NewOdom {
 		double radius;
 		double deltaX;
 		double deltaY;
-		gyroPosition = -Robot.gyro.getGyroYaw();
+		gyroPosition = Rotation2d.fromDegrees(-Robot.gyro.getGyroYaw());
 		
 		/*
 		Point slopeFactor = new Point(Math.sqrt(Math.cos(Math.toRadians(Robot.gyro.getGyroYaw())) * Math.cos(Math.toRadians(Robot.gyro.getGyroYaw())) * Math.cos(Math.toRadians(Robot.gyro.getGyroPitch())) * Math.cos(Math.toRadians(Robot.gyro.getGyroPitch())) + Math.sin(Math.toRadians(Robot.gyro.getGyroYaw())) * Math.sin(Math.toRadians(Robot.gyro.getGyroYaw())) * Math.cos(Math.toRadians(Robot.gyro.getGyroRoll())) * Math.cos(Math.toRadians(Robot.gyro.getGyroRoll()))),
@@ -135,10 +137,11 @@ public class NewOdom {
 			// This following line only works if the average of wheel positions is (0,0)
 
 			// need 2 set it to a pose instead 4 angle
-			prevPositions[i].set(currentPosition.add(wheelPositions[i]), currPositions[i].getHeading());
+			prevPositions[i] = currentPosition.plus(new Transform2d(wheelPositions[i], new Rotation2d()));
+			prevPositions[i] = new Pose2d(prevPositions[i].getTranslation(), Rotation2d.fromDegrees(currPositions[i].getRotation().getDegrees()));
 
 			// transformBy a transform that only has a diff angle?
-			currPositions[i].setHeading(-CANCoderList[i].getAbsolutePosition() + gyroPosition);
+			currPositions[i] = new Pose2d(currPositions[i].getTranslation(), gyroPosition.plus(Rotation2d.fromDegrees(-CANCoderList[i].getAbsolutePosition())));
 			
 			rotationChange = currPositions[i].getRotation().minus(prevPositions[i].getRotation());
 
@@ -184,7 +187,7 @@ public class NewOdom {
 			// log("Current: " + currPositions[i] + " Motion: " + wheelMotion + " New: " + currPositions[i].add(wheelMotion));
 
 			// need to make wheelMotion a pose
-			currPositions[i].set(currPositions[i].subtract(wheelMotion));
+			currPositions[i] = new Pose2d(currPositions[i].getX() - wheelMotion.getX(), currPositions[i].getY() - wheelMotion.getY(), new Rotation2d());
 		}
 	}
 
@@ -200,7 +203,7 @@ public class NewOdom {
 			// log("sumX: " + sumX + " Motor Count: " + motorCount + " CurrentPosition: " + currPositions[i]);
 		}
 		// need to get gyroPosition figured out w/rotation2d
-		currentPosition.set(sumX / motorCount, sumY / motorCount, gyroPosition);
+		currentPosition = new Pose2d(sumX / motorCount, sumY / motorCount, gyroPosition);
 	}
 
 	// Intended to be placed inside Robot.drive.run()
