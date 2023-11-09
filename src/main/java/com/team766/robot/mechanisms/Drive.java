@@ -55,11 +55,13 @@ public class Drive extends Mechanism {
 	// declaration of odometry object
 	private Odometry swerveOdometry;
 	// variable representing current position
+	// prob can replace with pose2d
 	private static PointDir currentPosition;
 
 	// other variables to set up odometry
 	private MotorController[] motorList;
 	private CANCoder[] CANCoderList;
+	// prob can replace with translation2d
 	private Point[] wheelPositions;
 
 	public Drive() {
@@ -98,10 +100,12 @@ public class Drive extends Mechanism {
 		m_SteerBL.setCurrentLimit(SwerveDriveConstants.STEER_MOTOR_CURRENT_LIMIT);
 
 		// Sets up odometry
+		// prob can replace with pose2d
 		currentPosition = new PointDir(0, 0, 0);
 		motorList = new MotorController[] {m_DriveFR, m_DriveFL, m_DriveBL,
 				m_DriveBR};
 		CANCoderList = new CANCoder[] {e_FrontRight, e_FrontLeft, e_BackLeft, e_BackRight};
+		// prob can replace with translation2d
 		wheelPositions =
 				new Point[] {new Point(OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2),
 						new Point(OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, -OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2),
@@ -216,14 +220,17 @@ public class Drive extends Mechanism {
 
 	// TODO: rework odometry so it doesn't have to go through drive
 	// TODO: figure out why odometry x and y are swapped
+	// pose2d lol
 	public PointDir getCurrentPosition() {
 		return currentPosition;
 	}
 
+	// can you guess what i'm gonna say here
 	public void setCurrentPosition(Point P) {
 		swerveOdometry.setCurrentPosition(P);
 	}
 
+	// yet again
 	public void resetCurrentPosition() {
 		swerveOdometry.setCurrentPosition(new Point(0, 0));
 	}
