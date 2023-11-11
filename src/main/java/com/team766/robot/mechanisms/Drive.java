@@ -5,12 +5,14 @@ import com.team766.framework.Mechanism;
 import com.team766.hal.MotorController;
 import com.team766.hal.RobotProvider;
 import com.team766.hal.MotorController.ControlMode;
-import com.team766.localization.Odometry;
+import com.team766.localization.NewOdom;
 import com.team766.localization.Point;
 import com.team766.localization.PointDir;
 import com.team766.logging.Category;
 import com.team766.robot.constants.SwerveDriveConstants;
 import com.team766.robot.constants.OdometryInputConstants;
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import org.apache.commons.math3.geometry.euclidean.twod.Vector2D;
 
@@ -53,16 +55,16 @@ public class Drive extends Mechanism {
 	// TODO: rework odometry so it doesn't have to go through drive
 
 	// declaration of odometry object
-	private Odometry swerveOdometry;
+	private NewOdom swerveOdometry;
 	// variable representing current position
 	// prob can replace with pose2d
-	private static PointDir currentPosition;
+	private static Pose2d currentPosition;
 
 	// other variables to set up odometry
 	private MotorController[] motorList;
 	private CANCoder[] CANCoderList;
 	// prob can replace with translation2d
-	private Point[] wheelPositions;
+	private Translation2d[] wheelPositions;
 
 	public Drive() {
 		
@@ -101,19 +103,19 @@ public class Drive extends Mechanism {
 
 		// Sets up odometry
 		// prob can replace with pose2d
-		currentPosition = new PointDir(0, 0, 0);
+		currentPosition = new Pose2d();
 		motorList = new MotorController[] {m_DriveFR, m_DriveFL, m_DriveBL,
 				m_DriveBR};
 		CANCoderList = new CANCoder[] {e_FrontRight, e_FrontLeft, e_BackLeft, e_BackRight};
 		// prob can replace with translation2d
 		wheelPositions =
-				new Point[] {new Point(OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2),
-						new Point(OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, -OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2),
-						new Point(-OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, -OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2),
-						new Point(-OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2)};
+				new Translation2d[] {new Translation2d(OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2),
+						new Translation2d(OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, -OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2),
+						new Translation2d(-OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, -OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2),
+						new Translation2d(-OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2, OdometryInputConstants.DISTANCE_BETWEEN_WHEELS / 2)};
 		log("MotorList Length: " + motorList.length);
 		log("CANCoderList Length: " + CANCoderList.length);
-		swerveOdometry = new Odometry(motorList, CANCoderList, wheelPositions, OdometryInputConstants.WHEEL_CIRCUMFERENCE, OdometryInputConstants.GEAR_RATIO, OdometryInputConstants.ENCODER_TO_REVOLUTION_CONSTANT, OdometryInputConstants.RATE_LIMITER_TIME);
+		swerveOdometry = new NewOdom(motorList, CANCoderList, wheelPositions, OdometryInputConstants.WHEEL_CIRCUMFERENCE, OdometryInputConstants.GEAR_RATIO, OdometryInputConstants.ENCODER_TO_REVOLUTION_CONSTANT, OdometryInputConstants.RATE_LIMITER_TIME);
 
 		// Sets the offset value for each steering motor so that each is aligned
 		setEncoderOffset();
@@ -221,18 +223,18 @@ public class Drive extends Mechanism {
 	// TODO: rework odometry so it doesn't have to go through drive
 	// TODO: figure out why odometry x and y are swapped
 	// pose2d lol
-	public PointDir getCurrentPosition() {
+	public Pose2d getCurrentPosition() {
 		return currentPosition;
 	}
 
 	// can you guess what i'm gonna say here
-	public void setCurrentPosition(Point P) {
+	public void setCurrentPosition(Pose2d P) {
 		swerveOdometry.setCurrentPosition(P);
 	}
 
 	// yet again
 	public void resetCurrentPosition() {
-		swerveOdometry.setCurrentPosition(new Point(0, 0));
+		swerveOdometry.setCurrentPosition(new Pose2d());
 	}
 
 	// Odometry

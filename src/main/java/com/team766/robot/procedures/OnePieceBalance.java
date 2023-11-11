@@ -4,7 +4,8 @@ import com.team766.framework.Context;
 import com.team766.framework.Procedure;
 import com.team766.localization.PointDir;
 import com.team766.robot.Robot;
-
+import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.DriverStation;
 
 public class OnePieceBalance extends Procedure {
@@ -15,10 +16,10 @@ public class OnePieceBalance extends Procedure {
 		Robot.gyro.setGyro(90);
 		switch (DriverStation.getAlliance()) {
 			case Blue:
-				Robot.drive.setCurrentPosition(new PointDir(2.7, 2));
+				Robot.drive.setCurrentPosition(new Pose2d(2.7, 2, new Rotation2d()));
 				break;
 			case Red:
-				Robot.drive.setCurrentPosition(new PointDir(2.7, 14.5));
+				Robot.drive.setCurrentPosition(new Pose2d(2.7, 14.5, new Rotation2d()));
 				break;
 			case Invalid: //drop down
 			default: 
