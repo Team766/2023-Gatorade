@@ -32,24 +32,25 @@ One caveat is that the added vectors could be greater than 1, there, we need to 
 ## Limitations of sweve drive
 
 * **Very complex.** Because of the complex nature of swerve drive, the code is to read or understand. Moreover, the chance of something going wrong is high.
-* **Draws a lot of power.** Swerve drive uses 8 motors at once, which draw a lot of power, it is **nessessary** to prepare the amount of amps drawn by each motor on the robot.
+* **Draws a lot of power.** Swerve drive uses 8 motors at once, which draw a lot of power, so it is **nessessary** to prepare the amount of amps drawn by each motor on the robot.
 
 ## How to use swerve drive
 
-Call the `swerveDrive` procedure in the `Drive` mechanism. This procedure takes 3 parameters:
+Call the `controlFieldOriented` procedure in the `Drive` mechanism. This procedure takes 4 parameters:
 
-* `x` - The x component of the vector to move in.
-* `y` - The y component of the vector to move in.
-* `rotation` - The amount to rotate the robot.
+* `yawRad` the robot gyro's current yaw value **in radians**.
+* `x` - The x component of the vector to move in from -1 to 1.
+* `y` - The y component of the vector to move in from -1 to 1.
+* `turn` - The amount to rotate the robot from -1 to 1.
 
-You can also inpute a pointDir, but this should only be used for `FollowPoints`.
+You can also input a pose2d, but this should only be used for `FollowPoints`.
 ### Initialization
 
 Calling `Drive()` will initialize the mechanism. This will initialize the motors and the encoders.
 
 ### Running swerveDrive
 
-To use the mecanism, call the `swerveDrive` method. You can simply use joysticks as inputs. 
+To use the mecanism, call the `controlFieldOriented` method. You can simply use joysticks as inputs. 
 No procedures are needed for swerve, all is containted in the `Drive.java` mechanism.
 
 ### Integrating Mechanism with other code
