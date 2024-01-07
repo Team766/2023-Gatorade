@@ -48,16 +48,16 @@ public final class EncoderUtils {
 	 * Converts a target rotation (in degrees) to encoder units for the shoulder motor.
 	 */
 	public static double shoulderDegreesToRotations(double angle) {
-		// angle * net gear ratio * (rotations / degrees)
-		return angle * (4. / 1.) * (3. / 1.) * (1. / 360.);
+		// angle * sprocket ratio * net gear ratio * (rotations / degrees)
+		return angle * (52.0 / 12.0) * (64.0 / 30.0) * (4. / 1.) * (3. / 1.) * (1. / 360.);
 	}
 	
 	/**
 	 * Converts the shoulder motor's rotations to degrees.
 	 */
 	public static double shoulderRotationsToDegrees(double rotations) {
-		// rotations * net gear ratio * (degrees / rotations)
-		return rotations * (1. / 4.) * (1. / 3.) * (360. / 1.);
+		// rotations * sprocket ratio * net gear ratio * (degrees / rotations)
+		return rotations * (12.0 / 52.0) * (30.0 / 64.0) * (1. / 4.) * (1. / 3.) * (360. / 1.);
 	}
 
 	/**
