@@ -1,5 +1,6 @@
 package com.team766.robot.mechanisms;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
 import com.revrobotics.SparkMaxPIDController;
@@ -77,6 +78,9 @@ public class Shoulder extends Mechanism {
 			log(Severity.ERROR, "Motors are not CANSparkMaxes!");
 			throw new IllegalStateException("Motor are not CANSparkMaxes!");
 		}
+
+		halLeftMotor.setNeutralMode(NeutralMode.Brake);
+		halRightMotor.setNeutralMode(NeutralMode.Brake);
 
 		leftMotor = (CANSparkMax) halLeftMotor;
 		rightMotor = (CANSparkMax) halRightMotor;

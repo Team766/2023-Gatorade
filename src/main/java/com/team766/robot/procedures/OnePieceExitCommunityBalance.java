@@ -33,8 +33,10 @@ public class OnePieceExitCommunityBalance extends Procedure {
 		}
 		log("exiting");
 		new ScoreHigh(type).run(context);
+		new RetractWristvator().run(context);
 		new ExitCommunity().run(context);
 		log("Transitioning");
+		context.waitForSeconds(0.2);
 		new GyroBalance(DriverStation.getAlliance()).run(context);
 	}
 	

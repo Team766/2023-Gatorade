@@ -44,11 +44,11 @@ public class GyroBalance extends Procedure {
 
 	// Tweak these values to adjust how the robot balances
 	private final double LEVEL = 7;
-	private final double CORRECTION_DELAY = 0.7;
 	private final double SPEED_GROUND = .3;
 	private final double SPEED_TRANSITION = .25;
-	private final double SPEED_TILT = .12;
-	private final double SPEED_OVERSHOOT = .08;
+	private final double SPEED_TILT = .13;
+	private final double CORRECTION_TIME = 0.45;
+	private final double SPEED_OVERSHOOT = .8;
 	private final double OVERSHOOT_INCORRECT_MULT = 0.5;
 
 	/** 
@@ -70,7 +70,7 @@ public class GyroBalance extends Procedure {
 		double driveSpeed = 1;
 
 		// extend wristvator to put CG in a place where robot can climb ramp
-		new ExtendWristvatorToMid().run(context);
+		// new ExtendWristvatorToMid().run(context);
 
 		// Sets movement direction ground state if on ground
 		setDir(curY);
@@ -99,6 +99,8 @@ public class GyroBalance extends Procedure {
 			} else {
 				driveSpeed = absSpeed;
 			}
+			SmartDashboard.putString("Balance State", curState.toString());
+			SmartDashboard.putNumber("Balance Speed", driveSpeed);
 
 			// Drives the robot with the calculated speed and direction
 			Robot.drive.controlFieldOriented(Math.toRadians(Robot.gyro.getGyroYaw()), 0, driveSpeed, 0);
@@ -106,6 +108,10 @@ public class GyroBalance extends Procedure {
 		}
 		// Loops until robot is level or until a call to the abort() method
 		while (!(curState == State.RAMP_LEVEL));
+
+		context.waitForSeconds(CORRECTION_TIME);
+		Robot.drive.stopDrive();
+		new SetCross().run(context);
 	} 
 
 	// Sets state in state machine, see more details in GyroBalance.md
@@ -117,15 +123,14 @@ public class GyroBalance extends Procedure {
 		} else if (prevState == State.RAMP_TRANSITION && tilt < TOP_TILT && tilt > FLAP_TILT) {
 			curState = State.RAMP_TILT;
 			absSpeed = SPEED_TILT;
-			context.startAsync(new RetractWristvator());
+			// context.startAsync(new RetractWristvator());
 			log("Tilt, prevState: " + prevState + ", curState: " + curState);
 		} else if (prevState == State.RAMP_TILT && tilt < LEVEL) {
-			curState = State.OVERSHOOT;
+			curState = State.RAMP_LEVEL;
 			// If level, sets speed to negative to correct for overshooting
-			absSpeed = SPEED_OVERSHOOT;
 			absSpeed = -absSpeed;
 			log("Overshoot, prevState: " + prevState + ", curState: " + curState);
-		}  else if (prevState == State.OVERSHOOT && tilt < LEVEL) {
+		}  /* else if (prevState == State.OVERSHOOT && tilt < LEVEL) {
 			context.startAsync(new SetCross());
 			log("Level, prevState: " + prevState + ", curState: " + curState);
 			context.waitForSeconds(1);
@@ -134,8 +139,8 @@ public class GyroBalance extends Procedure {
 				curState = State.RAMP_LEVEL;
 			} else {
 				absSpeed *= -OVERSHOOT_INCORRECT_MULT;
-			}
-		}
+			} */
+		// }
 		if (curState == State.GROUND) {
 			absSpeed = SPEED_GROUND;
 		}

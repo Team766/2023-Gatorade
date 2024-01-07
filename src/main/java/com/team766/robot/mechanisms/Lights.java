@@ -11,7 +11,7 @@ public class Lights extends Mechanism{
 	private CANdle candle;
 	private static final int CANID = 5;
 	private static final int LED_COUNT = 90;
-	private Animation rainbowAnimation = new RainbowAnimation(1, 1.5, LED_COUNT);
+	private Animation rainbowAnimation = new RainbowAnimation(1, 0.75, LED_COUNT);
 
 	public Lights(){
 		candle = new CANdle(CANID, SwerveDriveConstants.SWERVE_CANBUS);

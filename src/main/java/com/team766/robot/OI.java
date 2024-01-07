@@ -15,6 +15,7 @@ import com.team766.robot.mechanisms.Intake;
 import com.team766.robot.mechanisms.Intake.GamePieceType;
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 /**
@@ -232,7 +233,7 @@ public class OI extends Procedure {
 			}
 
 			if (lightsRateLimit.next()) {
-				if (DriverStation.getMatchTime() > 0 && DriverStation.getMatchTime() < 17) {
+				if (DriverStation.getMatchTime() > 0 && DriverStation.getMatchTime() < 1700) {
 					Robot.lights.rainbow();
 				} else {
 					setLightsForGamePiece();
@@ -274,7 +275,7 @@ public class OI extends Procedure {
 		} else {
 			Robot.lights.yellow();
 		}
-
+		SmartDashboard.putString("Elevator mode", placementPosition.toString());
 		lightsRateLimit.reset();
 		lightsRateLimit.next();
 	}
