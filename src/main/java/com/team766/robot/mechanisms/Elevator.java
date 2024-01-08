@@ -1,4 +1,6 @@
 package com.team766.robot.mechanisms;
+
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.SparkMaxPIDController;
 import com.revrobotics.CANSparkMax.ControlType;
@@ -25,15 +27,15 @@ public class Elevator extends Mechanism {
 		/** Elevator is fully retracted.  Starting position. */
 		RETRACTED(0),
 		/** Elevator is the appropriate height to place game pieces at the low node. */
-		LOW(5), 
+		LOW(0),
 		/** Elevator is the appropriate height to place game pieces at the mid node. */
 		MID(18),
 		/** Elevator is at appropriate height to place game pieces at the high node. */
 		HIGH(40), 
 		/** Elevator is at appropriate height to grab cubes from the human player. */
-		HUMAN_CUBES(40.5),
+		HUMAN_CUBES(39),
 		/** Elevator is at appropriate height to grab cones from the human player. */
-		HUMAN_CONES(40.5),
+		HUMAN_CONES(40),
 		/** Elevator is fully extended. */
 		EXTENDED(40);
 
@@ -48,7 +50,7 @@ public class Elevator extends Mechanism {
 		}
 	}
 
-	private static final double NUDGE_INCREMENT = 5.0;
+	private static final double NUDGE_INCREMENT = 2.0;
 	private static final double NUDGE_DAMPENER = 0.25;
 
 	private static final double NEAR_THRESHOLD = 2.0;
@@ -77,6 +79,9 @@ public class Elevator extends Mechanism {
 			log(Severity.ERROR, "Motors are not CANSparkMaxes!");
 			throw new IllegalStateException("Motor are not CANSparkMaxes!");
 		}
+
+		halLeftMotor.setNeutralMode(NeutralMode.Brake);
+		halRightMotor.setNeutralMode(NeutralMode.Brake);
 
 		leftMotor = (CANSparkMax) halLeftMotor;
 		rightMotor = (CANSparkMax) halRightMotor;
