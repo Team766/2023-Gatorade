@@ -84,7 +84,7 @@ public class Shoulder extends Mechanism {
 		}
 
 		halLeftMotor.setNeutralMode(NeutralMode.Brake);
-		halRightMotor.setNeutralMode(NeutralMode.Coast);
+		halRightMotor.setNeutralMode(NeutralMode.Brake);
 
 		leftMotor = (CANSparkMax) halLeftMotor;
 		rightMotor = (CANSparkMax) halRightMotor;
