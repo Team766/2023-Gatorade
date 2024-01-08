@@ -1,7 +1,9 @@
 package com.team766.robot.mechanisms;
 
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMax.ControlType;
+import com.revrobotics.CANSparkMax.ExternalFollower;
 import com.revrobotics.SparkMaxPIDController;
 import com.team766.config.ConfigFileReader;
 import com.team766.framework.Mechanism;
@@ -28,14 +30,17 @@ public class Shoulder extends Mechanism {
 
 		// TODO: adjust these!
 
-		/** Shoulder is in top position. */
+		/** Shoulder is at the highest achievable position. */
 		TOP(45),
 
-		/** Shoulder is in position to intake and outtake pieces from/to the floor.  Starting position. */
-		FLOOR(20),
+		/** Shoulder is in position to intake from the substation or score in the upper nodes. */
+		RAISED(40),
 
-		/** Shoulder is fully down. **/
-		BOTTOM(15);
+		/** Shoulder is in position to intake and outtake pieces from/to the floor. */
+		FLOOR(10),
+
+		/** Shoulder is fully down.  Starting position. **/
+		BOTTOM(0);
 
 		private final double angle;
 		
@@ -43,7 +48,7 @@ public class Shoulder extends Mechanism {
 			this.angle = angle;
 		}
 
-		private double getAngle() {
+		public double getAngle() {
 			return angle;
 		}
 	}
@@ -78,12 +83,15 @@ public class Shoulder extends Mechanism {
 			throw new IllegalStateException("Motor are not CANSparkMaxes!");
 		}
 
+		halLeftMotor.setNeutralMode(NeutralMode.Brake);
+		halRightMotor.setNeutralMode(NeutralMode.Brake);
+
 		leftMotor = (CANSparkMax) halLeftMotor;
 		rightMotor = (CANSparkMax) halRightMotor;
 
 		rightMotor.follow(leftMotor, true /* invert */);
 
-		leftMotor.getEncoder().setPosition(EncoderUtils.elevatorHeightToRotations(Position.BOTTOM.getAngle()));
+		leftMotor.getEncoder().setPosition(EncoderUtils.shoulderDegreesToRotations(Position.BOTTOM.getAngle()));
 
 		pidController = leftMotor.getPIDController();
 		pidController.setFeedbackDevice(leftMotor.getEncoder());
@@ -168,10 +176,11 @@ public class Shoulder extends Mechanism {
 		SmartDashboard.putNumber("[SHOULDER] ff", ff);
 		SmartDashboard.putNumber("[SHOULDER] reference", angle);
 
-		pidController.setOutputRange(-1, 1);
+		pidController.setOutputRange(-0.4, 0.4);
 
 		// convert the desired target degrees to rotations
 		double rotations = EncoderUtils.shoulderDegreesToRotations(angle);
+		SmartDashboard.putNumber("[SHOULDER] Setpoint", rotations);
 
 		// set the reference point for the wrist
 		pidController.setReference(rotations, ControlType.kPosition, 0, ff);
@@ -182,6 +191,8 @@ public class Shoulder extends Mechanism {
 		if (rateLimiter.next()) {
 			SmartDashboard.putNumber("[SHOULDER] Angle", getAngle());
 			SmartDashboard.putNumber("[SHOULDER] Rotations", getRotations());
+			SmartDashboard.putNumber("[SHOULDER] Left Effort", leftMotor.getOutputCurrent());
+			SmartDashboard.putNumber("[SHOULDER] Right Effort", rightMotor.getOutputCurrent());
 		}
 	}
 }

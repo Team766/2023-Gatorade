@@ -29,15 +29,15 @@ public class Wrist extends Mechanism {
 	public enum Position {
 
 		/** Wrist is in top position.  Starting position. */
-		TOP(-135),
+		TOP(-180),
 		/** Wrist is in the position for moving around the field. */ 
-		RETRACTED(-120.0),
+		RETRACTED(-175.0),
 		/** Wrist is level with ground. */
-		LEVEL(0.0),
-		HIGH_NODE(-30),
+		LEVEL(-65),
+		HIGH_NODE(-20),
 		MID_NODE(-25.5),
-		HUMAN_CONES(-17.5),
-		HUMAN_CUBES(-17.5),
+		HUMAN_CONES(-4),
+		HUMAN_CUBES(-8),
 		/** Wrist is fully down. **/
 		BOTTOM(60);
 
